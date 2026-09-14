@@ -11,10 +11,11 @@
     "typecheck": "pnpm -r --no-bail typecheck",
     "lint": "eslint . && prettier --check .",
     "test": "vitest run",
+    "cobertura": "pnpm --filter @constancia/domain test",
     "test:e2e:smoke": "playwright test --config=playwright.config.ts",
     "test:e2e:prod": "playwright test --config=playwright.prod.config.ts",
     "build": "pnpm -r build",
-    "verify": "pnpm typecheck && pnpm lint && pnpm test && pnpm test:e2e:smoke"
+    "verify": "pnpm typecheck && pnpm lint && pnpm test && pnpm cobertura && pnpm test:e2e:smoke"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.0",

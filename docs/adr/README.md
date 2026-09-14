@@ -11,8 +11,10 @@ Um arquivo por decisão, formato MADR, numerados a partir de `001`.
 | [005](005-multiusuario.md)             | Sem conta, sem `user_id`                      | recusado no escopo atual |
 | [006](006-sincronizacao.md)            | Sincronização adiada, exportação no lugar     | adiado                   |
 | [007](007-lembretes.md)                | Lembrete sem push e sem servidor              | adiado                   |
+| [008](008-semana-e-dia-da-semana.md)   | A semana começa na segunda, dia 0 a 6         | aceito                   |
+| [009](009-forca-do-habito.md)          | Força do hábito como média móvel exponencial  | aceito                   |
 
-Os três últimos divergem do `docs/PLANO.md` de propósito: o plano descreve o produto
+Os ADRs 005, 006 e 007 divergem do `docs/PLANO.md` de propósito: o plano descreve o produto
 com Supabase, e o `docs/ROADMAP.md` coloca backend, login e sincronização em
 **Não fazer**. Cada um registra o critério que o traria de volta.
 

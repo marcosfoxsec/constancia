@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Constância — tela Hoje</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="tokens.css" />
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--tinta);
+        color: var(--texto);
+        font-family: var(--corpo);
+        -webkit-font-smoothing: antialiased;
+      }
+      .app {
+        max-width: 480px;
+        margin: 0 auto;
+        padding: 24px 16px 44px;
+      }
+
+      .topo {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        margin-bottom: 18px;
+      }
+      h1 {
+        font-family: var(--display);
+        font-variation-settings:
+          'wdth' 82,
+          'wght' 750,
+          'opsz' 40;
+        font-size: 30px;
+        line-height: 1;
+        margin: 0;
+        letter-spacing: -0.02em;
+      }
+      .ano {
+        font-family: var(--display);
+        font-variation-settings:
+          'wdth' 78,
+          'wght' 500;
+        font-size: 13px;
+        color: var(--texto-2);
+      }
+
+      /* Painel emoldurado */
+      .painel {
+        background: var(--barro);
+        padding: 10px;
+        border-radius: 4px;
+        box-shadow: 0 1px 0 rgba(255, 255, 255, 0.05) inset;
+      }
+      .barra {
+        height: 12px;
+        background-image:
+          repeating-linear-gradient(45deg, var(--n2) 0 1.5px, transparent 1.5px 9px),
+          repeating-linear-gradient(-45deg, var(--n2) 0 1.5px, transparent 1.5px 9px);
+        margin: 0 0 10px;
+      }
+      .barra.fim {
+        margin: 10px 0 0;
+        transform: scaleX(-1);
+      }
+      .grade {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 4px;
+      }
+      .dia-nome {
+        font-family: var(--display);
+        font-variation-settings:
+          'wdth' 75,
+          'wght' 600;
+        font-size: 10px;
+        color: var(--texto-2);
+        text-align: center;
+        padding-bottom: 5px;
+      }
+      .ladrilho {
+        aspect-ratio: 1;
+        border-radius: 2px;
+        background: var(--vazio);
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+        position: relative;
+        overflow: hidden;
+      }
+      .ladrilho svg {
+        position: absolute;
+        inset: 15%;
+        width: 70%;
+        height: 70%;
+      }
+      .ladrilho.n1 {
+        background: var(--n1);
+      }
+      .ladrilho.n2 {
+        background: var(--n2);
+      }
+      .ladrilho.n3 {
+        background: var(--n3);
+      }
+      .ladrilho.n4 {
+        background: var(--n4);
+        box-shadow: inset 0 1px 0 #fff;
+      }
+      .ladrilho.futuro {
+        background: #122036;
+      }
+      .ladrilho.hoje {
+        outline: 2px solid var(--ambar);
+        outline-offset: 1px;
+      }
+
+      .legenda {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 16px 2px 0;
+        font-size: 13px;
+        color: var(--texto-2);
+      }
+      .legenda b {
+        font-family: var(--display);
+        font-variation-settings:
+          'wdth' 80,
+          'wght' 700;
+        color: var(--texto);
+        font-size: 15px;
+      }
+      .recado {
+        margin: 16px 0 0;
+        font-size: 14px;
+        line-height: 1.5;
+        padding: 12px 14px;
+        background: rgba(226, 163, 60, 0.1);
+        border: 1px solid rgba(226, 163, 60, 0.3);
+        border-radius: 3px;
+        color: #f2dcb6;
+      }
+
+      h2 {
+        font-family: var(--display);
+        font-variation-settings:
+          'wdth' 80,
+          'wght' 700;
+        font-size: 20px;
+        margin: 30px 0 10px;
+      }
+      .habito {
+        display: grid;
+        grid-template-columns: 46px 1fr auto;
+        gap: 14px;
+        align-items: center;
+        width: 100%;
+        background: #142338;
+        border: 0;
+        border-radius: 3px;
+        padding: 12px;
+        margin-bottom: 8px;
+        text-align: left;
+        color: inherit;
+        font: inherit;
+        cursor: pointer;
+      }
+      .marca {
+        width: 46px;
+        height: 46px;
+        border-radius: 2px;
+        background: var(--vazio);
+        position: relative;
+        overflow: hidden;
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+      }
+      .marca svg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+      }
+      .habito[aria-pressed='false'] .marca {
+        box-shadow: inset 0 0 0 2px rgba(226, 163, 60, 0.55);
+      }
+      .habito[aria-pressed='true'] .marca {
+        background: var(--n4);
+        box-shadow: inset 0 1px 0 #fff;
+        animation: assentar 320ms cubic-bezier(0.2, 0.9, 0.3, 1.2);
+      }
+      @keyframes assentar {
+        0% {
+          transform: translateY(-8px) rotate(-2deg);
+          opacity: 0.3;
+        }
+        100% {
+          transform: none;
+          opacity: 1;
+        }
+      }
+      .nome {
+        font-size: 17px;
+        line-height: 1.25;
+      }
+      .gatilho {
+        display: block;
+        font-size: 13px;
+        color: var(--texto-2);
+        margin-top: 3px;
+      }
+      .seq {
+        font-family: var(--display);
+        font-variation-settings:
+          'wdth' 76,
+          'wght' 600;
+        font-size: 13px;
+        color: var(--texto-2);
+        white-space: nowrap;
+      }
+      .habito:focus-visible {
+        outline: 2px solid var(--ambar);
+        outline-offset: 2px;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation: none !important;
+          transition: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="app">
+      <div class="topo">
+        <h1>Segunda, 14 de setembro</h1>
+        <div class="ano">2026</div>
+      </div>
+
+      <section class="painel" aria-label="Painel das últimas oito semanas">
+        <div class="barra"></div>
+        <div class="grade" id="cabecalho"></div>
+        <div class="grade" id="grade"></div>
+        <div class="barra fim"></div>
+      </section>
+
+      <div class="legenda">
+        <span><b>43</b> dias assentados em 49</span>
+        <span>1 de 4 hoje</span>
+      </div>
+      <p class="recado">Ontem ficou aberto. Um dia não desfaz o painel.</p>
+
+      <h2>Hoje</h2>
+      <button class="habito" aria-pressed="true">
+        <span class="marca" data-motivo="4"></span>
+        <span class="nome">Ler 10 páginas<span class="gatilho">depois do café</span></span>
+        <span class="seq">18 dias</span>
+      </button>
+      <button class="habito" aria-pressed="false">
+        <span class="marca"></span>
+        <span class="nome"
+          >Caminhar 30 minutos<span class="gatilho">quando o sol baixar</span></span
+        >
+        <span class="seq">6 dias</span>
+      </button>
+      <button class="habito" aria-pressed="false">
+        <span class="marca"></span>
+        <span class="nome"
+          >Alongar a lombar<span class="gatilho">antes do banho · mínimo 2 min</span></span
+        >
+        <span class="seq">31 dias</span>
+      </button>
+      <button class="habito" aria-pressed="false">
+        <span class="marca"></span>
+        <span class="nome">Violão, 10 minutos<span class="gatilho">depois do jantar</span></span>
+        <span class="seq">4 dias</span>
+      </button>
+    </main>
+
+    <script>
+      // O nível também é codificado pelo motivo, e não só pela cor.
+      function motivo(n, cor) {
+        const c = cor || 'rgba(255,255,255,.85)'
+        const p = {
+          1: `<circle cx="12" cy="12" r="2.6" fill="${c}"/>`,
+          2: `<circle cx="12" cy="12" r="2.6" fill="${c}"/><path d="M3 3h3v3H3zM18 3h3v3h-3zM3 18h3v3H3zM18 18h3v3h-3z" fill="${c}"/>`,
+          3: `<path d="M12 3l9 9-9 9-9-9z" fill="none" stroke="${c}" stroke-width="2"/><circle cx="12" cy="12" r="2.4" fill="${c}"/>`,
+          4: `<path d="M12 2c2 4 4 6 8 6-4 2-6 4-6 8-2-4-4-6-8-6 4-2 6-4 6-8z" fill="${c}"/><path d="M12 22c-2-4-4-6-8-6 4-2 6-4 6-8 2 4 4 6 8 6-4 2-6 4-6 8z" fill="${c}" opacity=".55"/><rect x="1" y="1" width="22" height="22" fill="none" stroke="${c}" stroke-width="1" opacity=".5"/>`,
+        }[n]
+        return p ? `<svg viewBox="0 0 24 24" aria-hidden="true">${p}</svg>` : ''
+      }
+
+      const dias = ['S', 'T', 'Q', 'Q', 'S', 'S', 'D']
+      const niveis = [
+        3, 4, 4, 0, 3, 4, 2, 4, 4, 3, 4, 4, 0, 3, 4, 3, 4, 4, 4, 2, 4, 0, 4, 4, 3, 4, 4, 1, 4, 4, 4,
+        0, 3, 4, 4, 4, 2, 4, 4, 4, 3, 1, 3, 4, 4, 4, 0, 4, 0,
+      ]
+      const rotulos = [
+        'nenhum hábito',
+        'um hábito',
+        'dois hábitos',
+        'três hábitos',
+        'quatro hábitos',
+      ]
+      document.getElementById('cabecalho').innerHTML = dias
+        .map((d) => `<div class="dia-nome">${d}</div>`)
+        .join('')
+      const grade = document.getElementById('grade')
+      niveis.forEach((n, i) => {
+        const d = document.createElement('div')
+        d.className = 'ladrilho' + (n ? ' n' + n : '')
+        d.setAttribute('role', 'img')
+        d.setAttribute('aria-label', `dia ${i + 1}: ${rotulos[n]}`)
+        d.innerHTML = motivo(n, n === 4 ? '#1b4fa8' : 'rgba(255,255,255,.8)')
+        grade.appendChild(d)
+      })
+      const hoje = document.createElement('div')
+      hoje.className = 'ladrilho n1 hoje'
+      hoje.setAttribute('role', 'img')
+      hoje.setAttribute('aria-label', 'hoje: um hábito de quatro')
+      hoje.innerHTML = motivo(1)
+      grade.appendChild(hoje)
+      for (let i = 0; i < 6; i++) {
+        const f = document.createElement('div')
+        f.className = 'ladrilho futuro'
+        grade.appendChild(f)
+      }
+      document.querySelectorAll('.marca').forEach((m) => {
+        m.innerHTML = m.dataset.motivo ? motivo(4, '#1b4fa8') : motivo(4, 'rgba(226,163,60,.22)')
+      })
+      document.querySelectorAll('.habito').forEach((b) =>
+        b.addEventListener('click', () => {
+          const feito = b.getAttribute('aria-pressed') === 'true'
+          b.setAttribute('aria-pressed', feito ? 'false' : 'true')
+          b.querySelector('.marca').innerHTML = feito
+            ? motivo(4, 'rgba(226,163,60,.22)')
+            : motivo(4, '#1b4fa8')
+        }),
+      )
+    </script>
+  </body>
+</html>

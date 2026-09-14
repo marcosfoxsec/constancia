@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Constância — direção 1, Musgo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Recursive:slnt,wght,CASL,CRSV,MONO@-15..0,300..800,0..1,0..1,0..1&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --fundo: #0c110e;
+        --superficie: #121a15;
+        --vazio: #18211b;
+        --borda-vazio: #222d25;
+        --n1: #1d3f2d;
+        --n2: #2b6742;
+        --n3: #3f915a;
+        --n4: #63c077;
+        --osso: #e9e4d7;
+        --texto: #e4eae2;
+        --texto-2: #8a978d;
+        --gap: 3px;
+        --raio: 3px;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--fundo);
+        color: var(--texto);
+        font-family: 'Atkinson Hyperlegible', system-ui, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      .app {
+        max-width: 480px;
+        margin: 0 auto;
+        padding: 28px 20px 40px;
+      }
+
+      /* Cabeçalho */
+      .data {
+        font-family: 'Recursive', system-ui, sans-serif;
+        font-variation-settings:
+          'CASL' 0.4,
+          'wght' 620;
+        font-size: 26px;
+        line-height: 1.15;
+        letter-spacing: -0.015em;
+        margin: 0;
+      }
+      .data span {
+        display: block;
+        color: var(--texto-2);
+        font-variation-settings:
+          'CASL' 0.2,
+          'wght' 420;
+        font-size: 15px;
+        letter-spacing: 0;
+        margin-top: 4px;
+      }
+
+      /* Mosaico */
+      .mosaico {
+        margin: 26px 0 0;
+      }
+      .semanas {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: var(--gap);
+      }
+      .dia-nome {
+        font-family: 'Recursive', monospace;
+        font-variation-settings:
+          'MONO' 1,
+          'wght' 500;
+        font-size: 11px;
+        color: var(--texto-2);
+        text-align: center;
+        padding-bottom: 6px;
+      }
+      .ladrilho {
+        aspect-ratio: 1;
+        border-radius: var(--raio);
+        background: var(--vazio);
+        box-shadow: inset 0 0 0 1px var(--borda-vazio);
+        border: 0;
+        padding: 0;
+      }
+      .n1 {
+        background: var(--n1);
+        box-shadow: none;
+      }
+      .n2 {
+        background: var(--n2);
+        box-shadow: none;
+      }
+      .n3 {
+        background: var(--n3);
+        box-shadow: none;
+      }
+      .n4 {
+        background: var(--n4);
+        box-shadow: none;
+      }
+      .futuro {
+        background: transparent;
+        box-shadow: inset 0 0 0 1px #161d18;
+      }
+      .hoje {
+        box-shadow:
+          inset 0 0 0 2px var(--osso),
+          0 0 0 4px rgba(233, 228, 215, 0.07);
+      }
+
+      .resumo {
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+        margin: 22px 0 0;
+        padding-top: 18px;
+        border-top: 1px solid #1c2620;
+      }
+      .numero {
+        font-family: 'Recursive', system-ui, sans-serif;
+        font-variation-settings:
+          'CASL' 0.5,
+          'wght' 760;
+        font-size: 46px;
+        line-height: 0.9;
+        letter-spacing: -0.03em;
+        color: var(--n4);
+      }
+      .resumo p {
+        margin: 0;
+        font-size: 14px;
+        color: var(--texto-2);
+        line-height: 1.4;
+      }
+      .recado {
+        margin: 14px 0 0;
+        font-size: 14px;
+        line-height: 1.5;
+        color: var(--texto);
+        background: var(--superficie);
+        border-left: 3px solid var(--n2);
+        padding: 10px 14px;
+        border-radius: 0 6px 6px 0;
+      }
+
+      /* Lista de hoje */
+      h2 {
+        font-family: 'Recursive', system-ui, sans-serif;
+        font-variation-settings:
+          'CASL' 0.4,
+          'wght' 620;
+        font-size: 15px;
+        color: var(--texto-2);
+        margin: 34px 0 12px;
+      }
+      .habito {
+        display: grid;
+        grid-template-columns: 44px 1fr auto;
+        align-items: center;
+        gap: 14px;
+        width: 100%;
+        background: none;
+        border: 0;
+        border-top: 1px solid #1a231d;
+        padding: 14px 2px;
+        text-align: left;
+        color: inherit;
+        font: inherit;
+        cursor: pointer;
+      }
+      .habito:last-of-type {
+        border-bottom: 1px solid #1a231d;
+      }
+      .marca {
+        width: 44px;
+        height: 44px;
+        border-radius: 7px;
+        background: var(--vazio);
+        box-shadow: inset 0 0 0 1px var(--borda-vazio);
+        transition: background 180ms ease;
+      }
+      .habito[aria-pressed='true'] .marca {
+        background: var(--n3);
+        box-shadow: none;
+        animation: assentar 320ms cubic-bezier(0.2, 0.9, 0.3, 1.2);
+      }
+      @keyframes assentar {
+        0% {
+          transform: translateY(-7px) scale(1.08);
+          opacity: 0.4;
+        }
+        100% {
+          transform: none;
+          opacity: 1;
+        }
+      }
+      .nome {
+        font-size: 17px;
+        line-height: 1.25;
+      }
+      .habito[aria-pressed='true'] .nome {
+        color: var(--texto-2);
+      }
+      .gatilho {
+        display: block;
+        font-size: 13px;
+        color: var(--texto-2);
+        margin-top: 3px;
+      }
+      .seq {
+        font-family: 'Recursive', monospace;
+        font-variation-settings:
+          'MONO' 1,
+          'wght' 500;
+        font-size: 12px;
+        color: var(--texto-2);
+        white-space: nowrap;
+      }
+      .habito:focus-visible {
+        outline: 2px solid var(--osso);
+        outline-offset: 2px;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation: none !important;
+          transition: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="app">
+      <h1 class="data">
+        Segunda, 14 de setembro
+        <span>Oito semanas assentadas</span>
+      </h1>
+
+      <section class="mosaico" aria-label="Mosaico das últimas oito semanas">
+        <div class="semanas" id="cabecalho"></div>
+        <div class="semanas" id="grade" style="margin-top: 0"></div>
+      </section>
+
+      <div class="resumo">
+        <div class="numero">43</div>
+        <p>dias com pelo menos um ladrilho, dos últimos 49</p>
+      </div>
+      <p class="recado">Ontem ficou aberto. Um dia não desfaz o mês.</p>
+
+      <h2>Hoje</h2>
+      <button class="habito" aria-pressed="true">
+        <span class="marca"></span>
+        <span class="nome">Ler 10 páginas<span class="gatilho">depois do café</span></span>
+        <span class="seq">18 d</span>
+      </button>
+      <button class="habito" aria-pressed="false">
+        <span class="marca"></span>
+        <span class="nome"
+          >Caminhar 30 minutos<span class="gatilho">quando o sol baixar</span></span
+        >
+        <span class="seq">6 d</span>
+      </button>
+      <button class="habito" aria-pressed="false">
+        <span class="marca"></span>
+        <span class="nome"
+          >Alongar a lombar<span class="gatilho">antes do banho · mínimo 2 min</span></span
+        >
+        <span class="seq">31 d</span>
+      </button>
+      <button class="habito" aria-pressed="false">
+        <span class="marca"></span>
+        <span class="nome">Violão, 10 minutos<span class="gatilho">depois do jantar</span></span>
+        <span class="seq">4 d</span>
+      </button>
+    </main>
+
+    <script>
+      const dias = ['S', 'T', 'Q', 'Q', 'S', 'S', 'D']
+      const niveis = [
+        3, 4, 4, 0, 3, 4, 2, 4, 4, 3, 4, 4, 0, 3, 4, 3, 4, 4, 4, 2, 4, 0, 4, 4, 3, 4, 4, 1, 4, 4, 4,
+        0, 3, 4, 4, 4, 2, 4, 4, 4, 3, 1, 3, 4, 4, 4, 0, 4, 0,
+      ]
+      document.getElementById('cabecalho').innerHTML = dias
+        .map((d) => `<div class="dia-nome">${d}</div>`)
+        .join('')
+      const grade = document.getElementById('grade')
+      const rotulos = [
+        'nenhum hábito',
+        'um hábito',
+        'dois hábitos',
+        'três hábitos',
+        'quatro hábitos',
+      ]
+      niveis.forEach((n, i) => {
+        const b = document.createElement('div')
+        b.className = 'ladrilho' + (n ? ' n' + n : '')
+        b.setAttribute('role', 'img')
+        b.setAttribute('aria-label', `dia ${i + 1}: ${rotulos[n]}`)
+        grade.appendChild(b)
+      })
+      const hoje = document.createElement('div')
+      hoje.className = 'ladrilho n1 hoje'
+      hoje.setAttribute('role', 'img')
+      hoje.setAttribute('aria-label', 'hoje: um hábito de quatro')
+      grade.appendChild(hoje)
+      for (let i = 0; i < 6; i++) {
+        const f = document.createElement('div')
+        f.className = 'ladrilho futuro'
+        grade.appendChild(f)
+      }
+      document
+        .querySelectorAll('.habito')
+        .forEach((b) =>
+          b.addEventListener('click', () =>
+            b.setAttribute(
+              'aria-pressed',
+              b.getAttribute('aria-pressed') === 'true' ? 'false' : 'true',
+            ),
+          ),
+        )
+    </script>
+  </body>
+</html>

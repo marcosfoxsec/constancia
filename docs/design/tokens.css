@@ -1,0 +1,63 @@
+/*
+  Constância — tokens visuais. Direção "azulejo".
+  Fonte única dos valores citados no DESIGN.md. O pacote @constancia/ui
+  reexporta estes tokens como variáveis CSS com os mesmos nomes.
+*/
+:root {
+  /* Cor: fundo e superfície */
+  --tinta: #101c2e; /* fundo do app */
+  --barro: #0b1422; /* fundo do painel de azulejo */
+  --superficie: #142338; /* cartão, linha de hábito */
+  --linha: #1f3149; /* divisória */
+
+  /* Cor: o esmalte. O nível 0 a 4 é quantos hábitos do dia foram cumpridos. */
+  --vazio: #18293f; /* 0, ladrilho sem esmalte */
+  --n1: #26538f;
+  --n2: #2a63b4;
+  --n3: #6e9fdf;
+  --n4: #dfeaf7; /* dia cheio: esmalte claro com motivo em cobalto */
+  --cobalto: #1b4fa8; /* o motivo pintado sobre o esmalte claro */
+
+  /* Cor: acento. Âmbar marca o que ainda está aberto, nunca o que falhou. */
+  --ambar: #e2a33c;
+  --ambar-fraco: rgba(226, 163, 60, 0.22);
+
+  /* Cor: texto */
+  --texto: #e6ecf4; /* 14,4:1 sobre --tinta */
+  --texto-2: #8ba0bb; /* 6,4:1 sobre --tinta */
+
+  /* Tipografia */
+  --display: 'Bricolage Grotesque', system-ui, sans-serif;
+  --corpo: 'Atkinson Hyperlegible', system-ui, sans-serif;
+  --t-titulo: 30px;
+  --t-secao: 20px;
+  --t-item: 17px;
+  --t-corpo: 15px;
+  --t-apoio: 13px;
+  --t-micro: 10px;
+
+  /* Espaço: base 4 */
+  --e1: 4px;
+  --e2: 8px;
+  --e3: 12px;
+  --e4: 16px;
+  --e6: 24px;
+  --e8: 32px;
+
+  /* Raio: o ladrilho é quase reto. Nada de cartão arredondado. */
+  --r-ladrilho: 2px;
+  --r-cartao: 3px;
+  --r-painel: 4px;
+
+  /* Movimento: existe um só. O ladrilho assentando. */
+  --assentar: 320ms cubic-bezier(0.2, 0.9, 0.3, 1.2);
+
+  /* Medidas */
+  --alvo: 44px; /* alvo de toque mínimo */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --assentar: 1ms linear;
+  }
+}

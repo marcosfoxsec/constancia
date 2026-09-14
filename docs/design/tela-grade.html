@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Constância — tela Grade</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="tokens.css" />
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--tinta);
+        color: var(--texto);
+        font-family: var(--corpo);
+        -webkit-font-smoothing: antialiased;
+      }
+      .app {
+        max-width: 480px;
+        margin: 0 auto;
+        padding: var(--e6) var(--e4) 44px;
+      }
+      h1 {
+        font-family: var(--display);
+        font-variation-settings:
+          'wdth' 82,
+          'wght' 750,
+          'opsz' 40;
+        font-size: var(--t-titulo);
+        line-height: 1;
+        margin: 0 0 var(--e4);
+        letter-spacing: -0.02em;
+      }
+
+      /* Filtro por hábito */
+      .filtros {
+        display: flex;
+        gap: var(--e2);
+        overflow-x: auto;
+        padding-bottom: var(--e1);
+        margin-bottom: var(--e4);
+      }
+      .filtro {
+        flex: none;
+        font: inherit;
+        font-size: var(--t-apoio);
+        color: var(--texto-2);
+        background: var(--superficie);
+        border: 1px solid var(--linha);
+        border-radius: var(--r-cartao);
+        padding: 7px 12px;
+        cursor: pointer;
+      }
+      .filtro[aria-pressed='true'] {
+        background: var(--n4);
+        border-color: var(--n4);
+        color: #0b1422;
+        font-weight: 700;
+      }
+      .filtro:focus-visible {
+        outline: 2px solid var(--ambar);
+        outline-offset: 2px;
+      }
+
+      /* Painel do mês */
+      .mes {
+        background: var(--barro);
+        border-radius: var(--r-painel);
+        padding: var(--e3);
+        margin-bottom: var(--e3);
+      }
+      .mes h2 {
+        font-family: var(--display);
+        font-variation-settings:
+          'wdth' 80,
+          'wght' 700;
+        font-size: var(--t-secao);
+        margin: 0 0 var(--e3);
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+      }
+      .mes h2 span {
+        font-family: var(--corpo);
+        font-size: var(--t-apoio);
+        font-weight: 400;
+        color: var(--texto-2);
+      }
+      .grade {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: var(--e1);
+      }
+      .dia-nome {
+        font-family: var(--display);
+        font-variation-settings:
+          'wdth' 75,
+          'wght' 600;
+        font-size: var(--t-micro);
+        color: var(--texto-2);
+        text-align: center;
+        padding-bottom: 5px;
+      }
+      .cel {
+        aspect-ratio: 1;
+        border: 0;
+        padding: 0;
+        border-radius: var(--r-ladrilho);
+        background: var(--vazio);
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+      }
+      .cel svg {
+        position: absolute;
+        inset: 15%;
+        width: 70%;
+        height: 70%;
+      }
+      .cel.fora {
+        background: none;
+        box-shadow: none;
+        cursor: default;
+      }
+      .cel.n1 {
+        background: var(--n1);
+      }
+      .cel.n2 {
+        background: var(--n2);
+      }
+      .cel.n3 {
+        background: var(--n3);
+      }
+      .cel.n4 {
+        background: var(--n4);
+        box-shadow: inset 0 1px 0 #fff;
+      }
+      .cel.hoje {
+        outline: 2px solid var(--ambar);
+        outline-offset: 1px;
+      }
+      .cel:focus {
+        outline: 3px solid var(--ambar);
+        outline-offset: 2px;
+        z-index: 1;
+      }
+      .num {
+        position: absolute;
+        top: 2px;
+        left: 3px;
+        font-size: 9px;
+        color: rgba(255, 255, 255, 0.45);
+      }
+      .cel.n4 .num {
+        color: rgba(11, 20, 34, 0.5);
+      }
+
+      .teclado {
+        font-size: var(--t-apoio);
+        color: var(--texto-2);
+        margin: var(--e3) 2px var(--e6);
+        line-height: 1.5;
+      }
+      kbd {
+        font-family: var(--display);
+        font-variation-settings:
+          'wdth' 76,
+          'wght' 600;
+        font-size: 12px;
+        background: var(--superficie);
+        border: 1px solid var(--linha);
+        border-radius: 3px;
+        padding: 1px 5px;
+        color: var(--texto);
+      }
+
+      /* Legenda dos motivos */
+      .legenda {
+        display: flex;
+        align-items: center;
+        gap: var(--e2);
+        font-size: var(--t-apoio);
+        color: var(--texto-2);
+        margin-bottom: var(--e6);
+      }
+      .legenda .cel {
+        width: 22px;
+        aspect-ratio: 1;
+        cursor: default;
+      }
+
+      /* Números do período */
+      .numeros {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--e2);
+      }
+      .numeros div {
+        background: var(--superficie);
+        border-radius: var(--r-cartao);
+        padding: var(--e3);
+      }
+      .numeros b {
+        display: block;
+        font-family: var(--display);
+        font-variation-settings:
+          'wdth' 80,
+          'wght' 750;
+        font-size: 26px;
+        letter-spacing: -0.02em;
+        margin-bottom: 2px;
+      }
+      .numeros span {
+        font-size: var(--t-apoio);
+        color: var(--texto-2);
+        line-height: 1.3;
+        display: block;
+      }
+      .forca {
+        grid-column: 1 / -1;
+      }
+      .barra-forca {
+        height: 10px;
+        border-radius: 1px;
+        background: var(--vazio);
+        margin-top: var(--e3);
+        overflow: hidden;
+      }
+      .barra-forca i {
+        display: block;
+        height: 100%;
+        width: 78%;
+        background: var(--n3);
+      }
+    </style>
+  </head>
+  <body>
+    <main class="app">
+      <h1>Grade</h1>
+
+      <div class="filtros" role="group" aria-label="Filtrar por hábito">
+        <button class="filtro" aria-pressed="true">Todos os hábitos</button>
+        <button class="filtro" aria-pressed="false">Ler 10 páginas</button>
+        <button class="filtro" aria-pressed="false">Caminhar 30 minutos</button>
+        <button class="filtro" aria-pressed="false">Alongar a lombar</button>
+      </div>
+
+      <section class="mes" aria-label="Setembro de 2026">
+        <h2>Setembro <span>13 de 14 assentados</span></h2>
+        <div class="grade" id="cab-set"></div>
+        <div class="grade" id="set"></div>
+      </section>
+
+      <section class="mes" aria-label="Agosto de 2026">
+        <h2>Agosto <span>28 de 31 assentados</span></h2>
+        <div class="grade" id="cab-ago"></div>
+        <div class="grade" id="ago"></div>
+      </section>
+
+      <p class="teclado">
+        <kbd>←</kbd> <kbd>→</kbd> <kbd>↑</kbd> <kbd>↓</kbd> andam pelos dias,
+        <kbd>espaço</kbd> marca o dia, <kbd>Home</kbd> volta para hoje. Cada célula é anunciada como
+        “14 de setembro, quatro hábitos de quatro”.
+      </p>
+
+      <div class="legenda" id="legenda">
+        <span>nenhum</span>
+        <div class="cel" role="img" aria-label="nenhum hábito"></div>
+      </div>
+
+      <section class="numeros" aria-label="Números do período">
+        <div><b>18</b><span>dias seguidos</span></div>
+        <div><b>41</b><span>melhor sequência</span></div>
+        <div><b>2</b><span>faltas em 60 dias</span></div>
+        <div class="forca">
+          <b>0,78</b><span>força do hábito, média móvel dos últimos 30 dias</span>
+          <div class="barra-forca" role="img" aria-label="força 0,78 de 1"><i></i></div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      function motivo(n, cor) {
+        const c = cor || 'rgba(255,255,255,.85)'
+        const p = {
+          1: `<circle cx="12" cy="12" r="2.6" fill="${c}"/>`,
+          2: `<circle cx="12" cy="12" r="2.6" fill="${c}"/><path d="M3 3h3v3H3zM18 3h3v3h-3zM3 18h3v3H3zM18 18h3v3h-3z" fill="${c}"/>`,
+          3: `<path d="M12 3l9 9-9 9-9-9z" fill="none" stroke="${c}" stroke-width="2"/><circle cx="12" cy="12" r="2.4" fill="${c}"/>`,
+          4: `<path d="M12 2c2 4 4 6 8 6-4 2-6 4-6 8-2-4-4-6-8-6 4-2 6-4 6-8z" fill="${c}"/><path d="M12 22c-2-4-4-6-8-6 4-2 6-4 6-8 2 4 4 6 8 6-4 2-6 4-6 8z" fill="${c}" opacity=".55"/><rect x="1" y="1" width="22" height="22" fill="none" stroke="${c}" stroke-width="1" opacity=".5"/>`,
+        }[n]
+        return p ? `<svg viewBox="0 0 24 24" aria-hidden="true">${p}</svg>` : ''
+      }
+      const rotulos = [
+        'nenhum hábito de quatro',
+        'um hábito de quatro',
+        'dois hábitos de quatro',
+        'três hábitos de quatro',
+        'quatro hábitos de quatro',
+      ]
+      const dias = ['S', 'T', 'Q', 'Q', 'S', 'S', 'D']
+      for (const id of ['cab-set', 'cab-ago']) {
+        document.getElementById(id).innerHTML = dias
+          .map((d) => `<div class="dia-nome">${d}</div>`)
+          .join('')
+      }
+
+      function pinta(alvo, mes, primeiroDiaSemana, total, niveis, hoje) {
+        const g = document.getElementById(alvo)
+        for (let i = 0; i < primeiroDiaSemana; i++) {
+          const v = document.createElement('div')
+          v.className = 'cel fora'
+          g.appendChild(v)
+        }
+        for (let d = 1; d <= total; d++) {
+          const n = niveis[d - 1]
+          const b = document.createElement('button')
+          b.className = 'cel' + (n > 0 ? ' n' + n : '') + (d === hoje ? ' hoje' : '')
+          b.setAttribute('aria-label', `${d} de ${mes}, ${rotulos[n] || 'dia futuro'}`)
+          b.setAttribute('tabindex', d === hoje ? '0' : '-1')
+          b.innerHTML =
+            `<span class="num">${d}</span>` + (n ? motivo(n, n === 4 ? '#1b4fa8' : undefined) : '')
+          g.appendChild(b)
+        }
+      }
+
+      // Setembro de 2026 começa numa terça; os 14 primeiros dias têm registro.
+      const set = [3, 4, 4, 4, 2, 4, 4, 4, 3, 1, 3, 4, 0, 1]
+      pinta('set', 'setembro', 1, 14, set, 14)
+      const ago = [
+        4, 4, 3, 4, 4, 0, 3, 4, 3, 4, 4, 4, 2, 4, 0, 4, 4, 3, 4, 4, 1, 4, 4, 4, 0, 3, 4, 4, 4, 2, 4,
+      ]
+      pinta('ago', 'agosto', 5, 31, ago, 0)
+
+      const leg = document.getElementById('legenda')
+      for (let n = 1; n <= 4; n++) {
+        const c = document.createElement('div')
+        c.className = 'cel n' + n
+        c.setAttribute('role', 'img')
+        c.setAttribute('aria-label', rotulos[n])
+        c.innerHTML = motivo(n, n === 4 ? '#1b4fa8' : undefined)
+        leg.appendChild(c)
+      }
+      const fim = document.createElement('span')
+      fim.textContent = 'todos'
+      leg.appendChild(fim)
+
+      // Navegação por teclado: uma parada na grade, setas andam pelos dias.
+      document.querySelectorAll('.grade').forEach((g) => {
+        g.addEventListener('keydown', (e) => {
+          const cels = [...g.querySelectorAll('button.cel')]
+          const i = cels.indexOf(document.activeElement)
+          if (i < 0) return
+          const passo = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -7, ArrowDown: 7 }[e.key]
+          if (!passo) return
+          e.preventDefault()
+          const alvo = cels[i + passo]
+          if (!alvo) return
+          cels.forEach((c) => c.setAttribute('tabindex', '-1'))
+          alvo.setAttribute('tabindex', '0')
+          alvo.focus()
+        })
+      })
+    </script>
+  </body>
+</html>

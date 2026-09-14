@@ -10,6 +10,10 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
+    "test": "vitest run --coverage",
     "build": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "fast-check": "^4.10.0"
   }
 }

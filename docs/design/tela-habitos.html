@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Constância — tela Hábitos</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="tokens.css" />
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--tinta);
+        color: var(--texto);
+        font-family: var(--corpo);
+        -webkit-font-smoothing: antialiased;
+      }
+      .app {
+        max-width: 480px;
+        margin: 0 auto;
+        padding: var(--e6) var(--e4) 44px;
+      }
+      .topo {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: var(--e6);
+      }
+      h1 {
+        font-family: var(--display);
+        font-variation-settings:
+          'wdth' 82,
+          'wght' 750,
+          'opsz' 40;
+        font-size: var(--t-titulo);
+        line-height: 1;
+        margin: 0;
+        letter-spacing: -0.02em;
+      }
+      .novo {
+        font: inherit;
+        font-size: var(--t-corpo);
+        font-weight: 700;
+        color: #0b1422;
+        background: var(--n4);
+        border: 0;
+        border-radius: var(--r-cartao);
+        padding: 10px 14px;
+        min-height: var(--alvo);
+        cursor: pointer;
+      }
+      .novo:focus-visible {
+        outline: 2px solid var(--ambar);
+        outline-offset: 2px;
+      }
+
+      h2 {
+        font-family: var(--display);
+        font-variation-settings:
+          'wdth' 80,
+          'wght' 650;
+        font-size: var(--t-corpo);
+        color: var(--texto-2);
+        margin: var(--e6) 0 var(--e2);
+      }
+      h2:first-of-type {
+        margin-top: 0;
+      }
+
+      .habito {
+        display: block;
+        width: 100%;
+        text-align: left;
+        font: inherit;
+        color: inherit;
+        background: var(--superficie);
+        border: 1px solid var(--linha);
+        border-radius: var(--r-cartao);
+        padding: var(--e3) var(--e4);
+        margin-bottom: var(--e2);
+        cursor: pointer;
+      }
+      .habito:focus-visible {
+        outline: 2px solid var(--ambar);
+        outline-offset: 2px;
+      }
+      .nome {
+        font-size: var(--t-item);
+        line-height: 1.25;
+      }
+      .quando {
+        font-size: var(--t-apoio);
+        color: var(--texto-2);
+        margin-top: 3px;
+        line-height: 1.4;
+      }
+      .minimo {
+        display: inline-block;
+        font-size: 12px;
+        color: var(--ambar);
+        border: 1px solid rgba(226, 163, 60, 0.35);
+        border-radius: 2px;
+        padding: 1px 6px;
+        margin-top: var(--e2);
+      }
+      .rodape-habito {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: var(--e3);
+        margin-top: var(--e3);
+        padding-top: var(--e2);
+        border-top: 1px solid var(--linha);
+      }
+      .agenda {
+        display: flex;
+        gap: 3px;
+      }
+      .agenda i {
+        width: 18px;
+        height: 18px;
+        border-radius: var(--r-ladrilho);
+        background: var(--vazio);
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-style: normal;
+        font-size: 10px;
+        color: var(--texto-2);
+      }
+      .agenda i.on {
+        background: var(--n3);
+        box-shadow: none;
+        color: #0b1422;
+      }
+      .agenda i:nth-child(1)::before {
+        content: 'S';
+      }
+      .agenda i:nth-child(2)::before {
+        content: 'T';
+      }
+      .agenda i:nth-child(3)::before {
+        content: 'Q';
+      }
+      .agenda i:nth-child(4)::before {
+        content: 'Q';
+      }
+      .agenda i:nth-child(5)::before {
+        content: 'S';
+      }
+      .agenda i:nth-child(6)::before {
+        content: 'S';
+      }
+      .agenda i:nth-child(7)::before {
+        content: 'D';
+      }
+      .forca {
+        display: flex;
+        align-items: center;
+        gap: var(--e2);
+        font-size: 12px;
+        color: var(--texto-2);
+        white-space: nowrap;
+      }
+      .barra {
+        width: 54px;
+        height: 6px;
+        background: var(--vazio);
+        border-radius: 1px;
+        overflow: hidden;
+      }
+      .barra i {
+        display: block;
+        height: 100%;
+        background: var(--n3);
+      }
+
+      .dados {
+        margin-top: var(--e8);
+        padding-top: var(--e4);
+        border-top: 1px solid var(--linha);
+      }
+      .dados p {
+        font-size: var(--t-apoio);
+        color: var(--texto-2);
+        line-height: 1.5;
+        margin: 0 0 var(--e3);
+      }
+      .acoes {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--e2);
+      }
+      .acao {
+        font: inherit;
+        font-size: var(--t-apoio);
+        color: var(--texto);
+        background: none;
+        border: 1px solid var(--linha);
+        border-radius: var(--r-cartao);
+        padding: 10px 12px;
+        min-height: var(--alvo);
+        cursor: pointer;
+      }
+      .acao:focus-visible {
+        outline: 2px solid var(--ambar);
+        outline-offset: 2px;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="app">
+      <div class="topo">
+        <h1>Hábitos</h1>
+        <button class="novo">Novo hábito</button>
+      </div>
+
+      <h2>Pessoa que lê</h2>
+      <button class="habito">
+        <div class="nome">Ler 10 páginas</div>
+        <div class="quando">Depois do café, na mesa da cozinha</div>
+        <div class="minimo">mínimo: 1 página</div>
+        <div class="rodape-habito">
+          <div class="agenda" role="img" aria-label="todos os dias">
+            <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i
+            ><i class="on"></i><i class="on"></i><i class="on"></i>
+          </div>
+          <div class="forca">
+            <span class="barra" role="img" aria-label="força 0,86 de 1"
+              ><i style="width: 86%"></i
+            ></span>
+            0,86
+          </div>
+        </div>
+      </button>
+
+      <h2>Pessoa que cuida do corpo</h2>
+      <button class="habito">
+        <div class="nome">Caminhar 30 minutos</div>
+        <div class="quando">Quando o sol baixar, saindo pela porta da frente</div>
+        <div class="minimo">mínimo: dar a volta no quarteirão</div>
+        <div class="rodape-habito">
+          <div class="agenda" role="img" aria-label="segunda, quarta, sexta e sábado">
+            <i class="on"></i><i></i><i class="on"></i><i></i><i class="on"></i><i class="on"></i
+            ><i></i>
+          </div>
+          <div class="forca">
+            <span class="barra" role="img" aria-label="força 0,54 de 1"
+              ><i style="width: 54%"></i
+            ></span>
+            0,54
+          </div>
+        </div>
+      </button>
+      <button class="habito">
+        <div class="nome">Alongar a lombar</div>
+        <div class="quando">Antes do banho, no tapete da sala</div>
+        <div class="minimo">mínimo: 2 minutos</div>
+        <div class="rodape-habito">
+          <div class="agenda" role="img" aria-label="todos os dias">
+            <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i
+            ><i class="on"></i><i class="on"></i><i class="on"></i>
+          </div>
+          <div class="forca">
+            <span class="barra" role="img" aria-label="força 0,91 de 1"
+              ><i style="width: 91%"></i
+            ></span>
+            0,91
+          </div>
+        </div>
+      </button>
+
+      <h2>Pessoa que toca</h2>
+      <button class="habito">
+        <div class="nome">Violão, 10 minutos</div>
+        <div class="quando">Depois do jantar, com o violão já fora do case</div>
+        <div class="minimo">mínimo: afinar e tocar um acorde</div>
+        <div class="rodape-habito">
+          <div class="agenda" role="img" aria-label="de segunda a sexta">
+            <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i
+            ><i class="on"></i><i></i><i></i>
+          </div>
+          <div class="forca">
+            <span class="barra" role="img" aria-label="força 0,31 de 1"
+              ><i style="width: 31%"></i
+            ></span>
+            0,31
+          </div>
+        </div>
+      </button>
+
+      <section class="dados">
+        <h2>Seus dados</h2>
+        <p>
+          Tudo fica neste aparelho. O arquivo exportado é um JSON legível, com os hábitos, as
+          versões das metas e os registros.
+        </p>
+        <div class="acoes">
+          <button class="acao">Exportar JSON</button>
+          <button class="acao">Importar JSON</button>
+          <button class="acao">Importar habitos.html</button>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

@@ -19,8 +19,8 @@ jobs:
           token: ${{ secrets.GH_PAT_AGENTE }}
       - run: bash scripts/orcamento.sh
         env: { GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}" }
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v5
         with: { node-version: 22, cache: pnpm }
       - run: pnpm install --frozen-lockfile
       - run: npx playwright install --with-deps chromium

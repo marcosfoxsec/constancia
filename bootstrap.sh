@@ -22,12 +22,18 @@ fi
 
 # --- PAT do agente ------------------------------------------------------------
 # Necessário porque um PR criado com o GITHUB_TOKEN padrão não dispara outros workflows.
+#
+# Use um PAT CLÁSSICO. O claude-code-action confere a permissão de quem disparou
+# em GET /repos/{owner}/{repo}/collaborators/{username}/permission, e um PAT
+# fine-grained com Contents, Pull requests, Issues e Workflows recebe
+# "Resource not accessible by personal access token" nesse endpoint, mesmo
+# alcançando o repositório no checkout.
 if [ -z "${GH_PAT_AGENTE:-}" ]; then
   echo
-  echo "Crie um fine-grained PAT em:"
-  echo "  https://github.com/settings/personal-access-tokens/new"
-  echo "  Repositório: apenas $REPO"
-  echo "  Permissões: Contents (RW), Pull requests (RW), Issues (RW), Workflows (RW)"
+  echo "Crie um PAT clássico em:"
+  echo "  https://github.com/settings/tokens/new"
+  echo "  Escopos: repo, workflow"
+  echo "  Validade: o menor prazo que você aceite renovar"
   read -rsp "Cole o PAT: " GH_PAT_AGENTE; echo
 fi
 

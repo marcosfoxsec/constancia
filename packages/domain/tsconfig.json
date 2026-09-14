@@ -1,0 +1,9 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    // Sem "DOM": o domínio não conhece navegador. Ver Seção 4.2 do plano.
+    "lib": ["ES2022"],
+    "types": []
+  },
+  "include": ["src"]
+}

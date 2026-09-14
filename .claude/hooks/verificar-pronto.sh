@@ -17,7 +17,7 @@ if git diff --quiet "$base" -- . 2>/dev/null && [ -z "$(git ls-files --others --
   exit 0
 fi
 
-if saida="$(pnpm -s verify 2>&1)"; then
+if saida="$(pnpm --silent verify 2>&1)"; then
   rm -f "$contador"
   exit 0
 fi

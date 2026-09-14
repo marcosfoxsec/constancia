@@ -1,0 +1,32 @@
+{
+  "name": "constancia",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@12.4.1",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "typecheck": "pnpm -r --no-bail typecheck",
+    "lint": "eslint . && prettier --check .",
+    "test": "vitest run",
+    "test:e2e:smoke": "playwright test --config=playwright.config.ts",
+    "test:e2e:prod": "playwright test --config=playwright.prod.config.ts",
+    "build": "pnpm -r build",
+    "verify": "pnpm typecheck && pnpm lint && pnpm test && pnpm test:e2e:smoke"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.0",
+    "@playwright/test": "^1.56.0",
+    "@types/node": "^26.5.1",
+    "@vitest/coverage-v8": "^3.2.4",
+    "eslint": "^9.39.0",
+    "eslint-config-prettier": "^10.1.8",
+    "globals": "^16.4.0",
+    "prettier": "^3.6.2",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.46.0",
+    "vitest": "^3.2.4"
+  }
+}

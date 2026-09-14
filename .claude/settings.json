@@ -54,7 +54,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "pnpm -s exec prettier --write --ignore-unknown \"$(jq -r '.tool_input.file_path')\" >/dev/null 2>&1 || true"
+            "command": "pnpm --silent exec prettier --write --ignore-unknown \"$(jq -r '.tool_input.file_path')\" >/dev/null 2>&1 || true"
           }
         ]
       }

@@ -1,0 +1,7 @@
+packages:
+  - apps/*
+  - packages/*
+
+# pnpm 12 bloqueia scripts de instalação por padrão. Liberados só os necessários.
+allowBuilds:
+  esbuild: true

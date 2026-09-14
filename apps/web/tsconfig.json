@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    // Só o navegador. Nada de Node aqui: os arquivos de configuração
+    // ficam no tsconfig.node.json.
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "jsx": "react-jsx",
+    "types": ["vite/client", "vite-plugin-pwa/client"],
+    "paths": {
+      "@constancia/domain": ["../../packages/domain/src/index.ts"],
+      "@constancia/ui": ["../../packages/ui/src/index.ts"]
+    }
+  },
+  "include": ["src"]
+}

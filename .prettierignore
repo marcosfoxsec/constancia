@@ -1,0 +1,17 @@
+pnpm-lock.yaml
+dist/
+coverage/
+playwright-report/
+test-results/
+dev-dist/
+
+# Arquivos do kit. Os quatro primeiros são protegidos pelo check "invariantes":
+# reformatá-los reprovaria o PR. PLANO.md e LEIA-ME.md são documentos de origem,
+# mantidos byte a byte como recebidos.
+.github/
+.claude/hooks/
+docs/AUTONOMIA.md
+scripts/
+bootstrap.sh
+docs/PLANO.md
+LEIA-ME.md

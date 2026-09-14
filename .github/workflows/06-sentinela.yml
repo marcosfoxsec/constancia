@@ -1,0 +1,22 @@
+name: 06 Sentinela
+on:
+  schedule: [{ cron: "0 11 * * 1" }]
+  workflow_dispatch:
+jobs:
+  medir:
+    runs-on: ubuntu-latest
+    permissions: { contents: read, issues: write }
+    steps:
+      - env: { GH_TOKEN: "${{ secrets.GH_PAT_AGENTE }}" }
+        run: |
+          desde=$(date -u -d '30 days ago' +%Y-%m-%d)
+          m=$(gh pr list --state merged --search "merged:>=$desde" --limit 200 --json number -q 'length')
+          r=$(gh api "repos/${{ github.repository }}/commits?since=${desde}T00:00:00Z" --paginate \
+              -q '[.[]|select(.commit.message|startswith("Revert"))]|length' | paste -sd+ | bc)
+          i=$(gh issue list --label incidente --search "created:>=$desde" --limit 100 --json number -q 'length')
+          echo "merges=$m reverts=${r:-0} incidentes=$i"
+          if [ "${m:-0}" -ge 10 ] && [ $(( ${r:-0} * 100 / m )) -gt 10 ]; then
+            gh variable set AUTONOMIA --body "off"
+            gh issue create --title "Autonomia suspensa: reversão acima de 10%" \
+              --body "merges=$m reverts=$r incidentes=$i em 30 dias. Religue com: gh variable set AUTONOMIA --body on"
+          fi

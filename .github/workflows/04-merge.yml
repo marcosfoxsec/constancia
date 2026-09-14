@@ -1,0 +1,17 @@
+name: 04 Merge automático
+on:
+  pull_request: { types: [opened, synchronize, reopened, labeled] }
+jobs:
+  auto:
+    if: vars.AUTONOMIA == 'on' && startsWith(github.head_ref, 'claude/')
+    runs-on: ubuntu-latest
+    permissions: { contents: write, pull-requests: write }
+    steps:
+      - env:
+          GH_TOKEN: ${{ secrets.GH_PAT_AGENTE }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          if gh pr view "$PR" --json labels -q '.labels[].name' | grep -qx 'precisa-humano'; then
+            echo "Marcado para revisão humana. Auto-merge não ativado."; exit 0
+          fi
+          gh pr merge --auto --squash --delete-branch "$PR"

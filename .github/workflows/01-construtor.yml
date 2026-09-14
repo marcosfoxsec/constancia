@@ -1,0 +1,36 @@
+name: 01 Construtor
+on:
+  issues: { types: [labeled] }
+  workflow_dispatch:
+    inputs: { issue: { description: Número da issue, required: true } }
+concurrency: { group: construtor, cancel-in-progress: false }
+jobs:
+  construir:
+    if: >
+      vars.AUTONOMIA == 'on' &&
+      (github.event_name == 'workflow_dispatch' || github.event.label.name == 'aprovado')
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    permissions: { contents: write, pull-requests: write, issues: write, id-token: write }
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GH_PAT_AGENTE }}
+      - run: bash scripts/orcamento.sh
+        env: { GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}" }
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+      - run: npx playwright install --with-deps chromium
+      - uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          github_token: ${{ secrets.GH_PAT_AGENTE }}
+          allowed_bots: "*"
+          prompt: |
+            Use a skill implementar-issue para a issue
+            #${{ github.event.issue.number || inputs.issue }} de ${{ github.repository }}.
+            Abra o PR ao final. Não faça merge.
+          claude_args: --max-turns 100

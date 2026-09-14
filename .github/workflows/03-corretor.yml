@@ -1,0 +1,51 @@
+name: 03 Corretor
+on:
+  workflow_run:
+    workflows: [Checks]
+    types: [completed]
+jobs:
+  corrigir:
+    if: >
+      vars.AUTONOMIA == 'on' &&
+      github.event.workflow_run.conclusion == 'failure' &&
+      startsWith(github.event.workflow_run.head_branch, 'claude/')
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions: { contents: write, pull-requests: write, id-token: write }
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.workflow_run.head_branch }}
+          token: ${{ secrets.GH_PAT_AGENTE }}
+      - name: Limite de rodadas
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT_AGENTE }}
+          BR: ${{ github.event.workflow_run.head_branch }}
+        run: |
+          pr=$(gh pr list --head "$BR" --json number -q '.[0].number')
+          echo "PR=$pr" >> "$GITHUB_ENV"
+          n=$(git log --oneline origin/main.."$BR" --grep='^fix(ci)' | wc -l)
+          if [ "$n" -ge 3 ]; then
+            gh pr edit "$pr" --add-label precisa-humano
+            gh pr comment "$pr" --body "Três tentativas de correção sem sucesso. Parado para revisão humana."
+            exit 1
+          fi
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+      - run: npx playwright install --with-deps chromium
+      - uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          github_token: ${{ secrets.GH_PAT_AGENTE }}
+          allowed_bots: "*"
+          prompt: |
+            Os checks do PR #${{ env.PR }} falharam. Leia o log do run
+            ${{ github.event.workflow_run.html_url }} e os comentários do revisor.
+            Corrija o que foi apontado e faça commit na mesma branch, com mensagem
+            começando por "fix(ci):". Rode pnpm verify antes de encerrar.
+            Se discordar do revisor, responda no PR com o argumento técnico em vez de
+            mudar o código.
+          claude_args: --max-turns 60

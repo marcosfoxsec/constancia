@@ -1,0 +1,45 @@
+name: 05 Deploy
+on:
+  push: { branches: [main] }
+concurrency: { group: pages, cancel-in-progress: false }
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions: { contents: write, pages: write, id-token: write, issues: write }
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v6
+        with: { fetch-depth: 0, token: "${{ secrets.GH_PAT_AGENTE }}" }
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+        env: { BASE_PATH: "/${{ github.event.repository.name }}/" }
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with: { path: apps/web/dist }
+      - id: deploy
+        uses: actions/deploy-pages@v4
+
+      - name: Fumaça em produção
+        id: fumaca
+        run: |
+          npx playwright install --with-deps chromium
+          pnpm test:e2e:prod
+        env: { BASE_URL: "${{ vars.PROD_URL }}" }
+
+      - name: Reverter se quebrou
+        if: failure() && steps.fumaca.outcome == 'failure'
+        env: { GH_TOKEN: "${{ secrets.GH_PAT_AGENTE }}" }
+        run: |
+          git config user.name "constancia-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git revert --no-edit HEAD
+          git push origin main
+          gh issue create --label incidente,aprovado,nivel:B \
+            --title "Fumaça falhou após ${GITHUB_SHA::7}, revertido" \
+            --body "O deploy quebrou os testes de fumaça e o commit foi revertido. Investigue e corrija com teste de regressão. Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
